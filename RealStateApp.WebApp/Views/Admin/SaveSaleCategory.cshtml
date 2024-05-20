@@ -1,0 +1,46 @@
+﻿@using RealStateApp.Core.Application.ViewModels.Domain.SaleCategory
+@model SaveSaleCategoryViewModel
+@{
+    bool editMode = Model.Id == 0 ? false : true;
+    ViewData["Title"] = "SaveSaleCategory";
+}
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<div class="container-fluid" style="margin-top: 20px;">
+
+    <div class="row">
+        <div class="col-6 offset-3">
+            <div class="card">
+                <div class="card-header bg-light text-light text-center">
+                    <h4 class="text-center">@(editMode ? $"Editando: {Model.Name}" : "Creando un nuevo tipo de venta")</h4>
+                </div>
+                <div class="card-body">
+                    <form method="post" asp-controller="Admin" asp-action="@(editMode ? "EditSaleCategory":"CreateSaleCategory")" enctype="multipart/form-data">
+
+                        <div class="mb-3">
+                            <label asp-for="Name" class="form-label">Nombre: </label>
+                            <input type="text" asp-for="Name" class="form-control" placeholder="Nombre" />
+                            <span asp-validation-for="Name" class="text-danger"></span>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="Description" class="form-label">Descripcion de la mejora: </label>
+                            <input type="text" asp-for="Description" class="form-control" placeholder="Descripcion detallada" />
+                            <span asp-validation-for="Description" class="text-danger"></span>
+                        </div>
+
+                        <input type="hidden" asp-for="Id" />
+
+                        <button type="submit" class="btn btn-primary">Guardar</button>
+                        <a asp-controller="Admin" asp-action="ListSaleCategory" class="btn btn-warning">Volver atras</a>
+                    </form>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>

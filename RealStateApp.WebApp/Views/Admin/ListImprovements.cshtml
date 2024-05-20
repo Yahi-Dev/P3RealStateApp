@@ -1,0 +1,95 @@
+﻿@using RealStateApp.Core.Application.ViewModels.Domain.Improvement
+@model List<BaseImprovementViewModel>
+@{
+    ViewData["Title"] = "Index";
+}
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<!-- SweetAlert2 -->
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<a class="btn btn-primary" asp-controller="Admin" asp-action="CreateImprovement">New Improvement <img src="~/Icono/mejor-vendido.png" style="width: 30px; height: 30px; margin-left: 7px;" /></a>
+
+
+<!-- Basic Bootstrap Table -->
+<div class="container-fluid" style="margin-top: 50px;">
+    @if (Model == null || Model.Count == 0)
+    {
+        <h2>No hay mejoras registradas en el sistema</h2>
+    }
+    else
+    {
+        <div class="card-body">
+            <div class="row">
+                @foreach (BaseImprovementViewModel item in Model)
+                {
+                    <div class="card mb-3 mr-3" style="max-width: 500px; margin-right: 20px;">
+                        <div class="row no-gutters">
+                            <div class="col-md-8">
+                                <div class="card-body">
+                                    <h5 class="card-title"><strong>@item.ImprovementType</strong></h5>
+                                    <p class="card-text"><strong>Descripcion: </strong>@item.Description</p>
+                                </div>
+                                <a asp-controller="Admin" asp-action="EditImprovement" asp-route-id="@item.Id" class="btn btn-outline-warning mt-2">Editar</a>
+                                <a onclick="deleteImprovement('@item.Id')" class="btn btn-outline-danger mt-2">Eliminar</a>
+                            </div>
+                        </div>
+                    </div>
+
+                }
+            </div>
+        </div>
+    }
+</div>
+
+
+<script>
+    function deleteImprovement(id) {
+        Swal.fire({
+            title: `¿Quieres eliminar esta mejora?`,
+            showDenyButton: true,
+            confirmButtonText: "Sí",
+            denyButtonText: "No"
+        }).then((result) => {
+            if (result.isConfirmed) {
+                $.ajax({
+                    url: '/Admin/DeleteImprovement',
+                    type: 'POST',
+                    data: {
+                        id: id,
+                    },
+                    success: function (response) {
+                        Swal.fire(`Actualice la pagina`, "", "success");
+                    },
+                    error: function (xhr, status, error) {
+                        Swal.fire("Actualice la pagina", "", "success");
+                        console.error(xhr.responseText);
+                    }
+                });
+            } else if (result.isDenied) {
+                Swal.fire("Acción cancelada", "", "info");
+            }
+        });
+    }
+</script>
+
+
+<style>
+    #card {
+        border-radius: 6px;
+    }
+
+    .card {
+        border-radius: 20px;
+    }
+</style>

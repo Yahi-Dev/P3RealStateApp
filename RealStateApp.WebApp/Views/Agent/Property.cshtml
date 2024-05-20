@@ -1,0 +1,126 @@
+﻿@using RealStateApp.Core.Application.ViewModels.Domain.Property
+@model List<BasePropertyViewModel>
+@{
+    ViewData["Title"] = "Index";
+}
+
+<head>
+    <script src="https://kit.fontawesome.com/7302c44b99.js" crossorigin="anonymous"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="stylesheet" href="~/css/tableadmin.css" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Public+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600;1,700&display=swap"
+          rel="stylesheet" />
+
+    <!-- jQuery -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    <!-- SweetAlert2 -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+
+</head>
+
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<a class="btn btn-primary" asp-controller="Property" asp-action="CreateProperty">Nueva propiedad <img src="~/Icono/agregar-usuario.png" style="width: 30px; height: 30px; margin-left: 7px;" /></a>
+
+<br />
+<br />
+
+<div class="container-fluid" style="margin-top: 50px;">
+    @if (Model == null || Model.Count == 0)
+    {
+        <h2>No hay de propiedades registradas en el sistema</h2>
+    }
+
+    <div class="row">
+        @foreach (var item in Model)
+        {
+            <div class="col-xs-12 col-sm-6 col-md-6 col-lg-4" style="margin-top: 50px;">
+                <div class="property-item mb-30">
+                    <div class="position-relative overflow-hidden">
+                        <a asp-controller="Property" asp-action="Details" asp-route-id="@item.Id">
+                            <img class="img-fluid" src="@item.Image" style="width: 400px; height: 350px;">
+                        </a>
+                    </div>
+                    <div class="price mb-2"><span>Code: @item.Code</span></div>
+                    <div class="property-content">
+                        <div class="price mb-2"><span>DOP$@item.Price</span></div>
+                        <div>
+                            <h5 class="text-dark mb-3">@item.Location</h5>
+
+
+                            <div class="specs d-flex mb-4">
+                                <span class="d-block d-flex align-items-center me-3">
+                                    <span class="icon-bed me-2"></span>
+                                    <span class="caption">@item.Bedrooms beds</span>
+                                </span>
+                                <span class="d-block d-flex align-items-center">
+                                    <span class="icon-bath me-2"></span>
+                                    <span class="caption">@item.Bathrooms baths</span>
+                                </span>
+                                <span class="d-block d-flex align-items-center">
+                                    <span class="icon-bath me-2"></span>
+                                    <span class="caption">@item.Size m2</span>
+                                </span>
+                            </div>
+
+                            <a asp-action="Details" asp-controller="Property" asp-route-id="@item.Id"
+                               class="btn btn-primary py-2 px-3">See details</a>
+                            <a asp-controller="Property" asp-action="EditProperty" asp-route-id="@item.Id" class="btn btn-outline-success mt-2">Editar</a>
+                            <a onclick="deleteProperty('@item.Id')" class="btn btn-outline-danger mt-2">Eliminar</a>
+
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+<script>
+    function deleteProperty(id) {
+        Swal.fire({
+            title: `¿Quieres eliminar esta propiedad?`,
+            showDenyButton: true,
+            confirmButtonText: "Sí",
+            denyButtonText: "No"
+        }).then((result) => {
+            if (result.isConfirmed) {
+                $.ajax({
+                    url: '/Property/DeletePropertyPost',
+                    type: 'POST',
+                    data: {
+                        id: id,
+                    },
+                    success: function (response) {
+                        Swal.fire(`Actualice la pagina`, "", "success");
+                    },
+                    error: function (xhr, status, error) {
+                        Swal.fire("Actualice la pagina", "", "success");
+                        console.error(xhr.responseText);
+                    }
+                });
+            } else if (result.isDenied) {
+                Swal.fire("Acción cancelada", "", "info");
+            }
+        });
+    }
+</script>
+
+
+<style>
+    #card {
+        border-radius: 6px;
+    }
+
+    .card {
+        border-radius: 20px;
+    }
+</style>

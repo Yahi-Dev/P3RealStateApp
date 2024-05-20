@@ -1,0 +1,115 @@
+﻿@using RealStateApp.Core.Application.ViewModels.Identity.Users;
+@model List<BaseUserViewModel>
+@{
+    ViewData["Title"] = "Index";
+}
+
+<head>
+    <script src="https://kit.fontawesome.com/7302c44b99.js" crossorigin="anonymous"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="stylesheet" href="~/css/tableadmin.css" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Public+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600;1,700&display=swap"
+          rel="stylesheet" />
+
+    <!-- jQuery -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    <!-- SweetAlert2 -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+
+</head>
+
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<a class="btn btn-primary" asp-controller="Admin" asp-action="CreateDeveloper">New User <img src="~/Icono/agregar-usuario.png" style="width: 30px; height: 30px; margin-left: 7px;" /></a>
+
+
+<!-- Basic Bootstrap Table -->
+<div class="container-fluid" style="margin-top: 50px;">
+    @if (Model == null || Model.Count == 0)
+    {
+        <h2>No hay desarrolladores registrados en el sistema</h2>
+    }
+    else
+    {
+        <div class="card-body">
+            <div class="row">
+                @foreach (BaseUserViewModel item in Model)
+                {
+                    <div class="card mb-3 mr-3" style="max-width: 500px; margin-right: 20px;">
+                        <div class="row no-gutters">
+                            <div class="col-md-8">
+                                <div class="card-body">
+                                    <h5 class="card-title"><strong>@item.FirstName @item.LastName</strong></h5>
+                                    <p class="card-text"><strong>Correo: </strong>@item.Email</p>
+                                    <p class="card-text"><strong>UserName: </strong>@item.UserName</p>
+                                    <p class="card-text"><strong>Cedula: </strong>@item.IdCard</p>
+                                </div>
+                                <a asp-controller="Admin" asp-action="EditDeveloper" asp-route-id="@item.Id" class="btn btn-outline-success mt-2">Editar</a>
+                                @if (item.IsActive == true)
+                                {
+                                    <button onclick="confirmAction('@item.Id', '@item.Role', false)" class="btn btn-outline-warning mt-2">Inactivar</button>
+                                }
+                                @if (item.IsActive == false)
+                                {
+                                    <button onclick="confirmAction('@item.Id', '@item.Role', false)" class="btn btn-outline-info mt-2">Activar</button>
+                                }
+                            </div>
+                        </div>
+                    </div>
+
+                }
+            </div>
+        </div>
+    }
+</div>
+
+<script>
+    function confirmAction(id, role, isActive) {
+        let action = isActive ? "Activar" : "Inactivar";
+        Swal.fire({
+            title: `¿Quieres ${action} este Developer?`,
+            showDenyButton: true,
+            confirmButtonText: "Sí",
+            denyButtonText: "No"
+        }).then((result) => {
+            if (result.isConfirmed) {
+                $.ajax({
+                    url: '/Admin/ChangeAgentStatus',
+                    type: 'POST',
+                    data: {
+                        id: id,
+                        role: role
+                    },
+                    success: function (response) {
+                        Swal.fire(`Actualice la pagina`, "", "success");
+                    },
+                    error: function (xhr, status, error) {
+                        Swal.fire("Error al realizar la acción", "", "error");
+                        console.error(xhr.responseText);
+                    }
+                });
+            } else if (result.isDenied) {
+                Swal.fire("Acción cancelada", "", "info");
+            }
+        });
+    }
+</script>
+
+<style>
+    #card {
+        border-radius: 6px;
+    }
+
+    .card {
+        border-radius: 20px;
+    }
+</style>

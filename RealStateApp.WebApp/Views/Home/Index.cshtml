@@ -1,0 +1,249 @@
+﻿@using RealStateApp.WebApp.Models.Home;
+@model HomeViewModel;
+@using Microsoft.AspNetCore.Http
+@using RealStateApp.Core.Application.Dtos.Account
+@using RealStateApp.Core.Application.Enums
+@using RealStateApp.Core.Application.Helpers;
+
+@inject IHttpContextAccessor httpContext;
+
+@{
+    var user = httpContext.HttpContext.Session.Get<AuthenticationResponse>("user");
+    var userId = user != null ? user.Id : null;
+}
+<div class="hero page-inner overlay"
+     style="background-image: url('images/hero_bg_1.jpg'); background-size: cover; background-position: center; width: 1700px; right: 125px;">
+    <div class="container">
+        <div class="row justify-content-center align-items-center">
+            <div class="col-lg-9 text-center mt-5">
+                <h1 class="heading" data-aos="fade-up">Your dreams start here</h1>
+
+                <div class="container-fluid bg-image mb-5" style="padding: 35px;">
+                    <div class="container">
+                        <div class="row g-2">
+                         <form asp-action="Index" method="get">  
+                            <div class="col-md-10">
+                                <div class="row g-2">
+                                    <div class="col-md-4">
+                                        <input type="text" asp-for="@Model.Filter.Code" class="form-control border-0 py-3" placeholder="Property Code">
+                                    </div>
+                                    <div class="col-md-4">
+                                        <input type="number" asp-for="@Model.Filter.Bathrooms" class="form-control border-0 py-3" max="20"  placeholder="Bathrooms">
+                                    </div>
+                                    <div class="col-md-4">
+                                        <input type="number" asp-for="@Model.Filter.Bedrooms" class="form-control border-0 py-3" max="30"placeholder="Bedrooms">
+                                    </div>
+                                    <div class="col-md-4">
+                                        <input type="number" asp-for="@Model.Filter.PriceMin" class="form-control border-0 py-3"placeholder="Minimum Price">
+                                    </div>
+                                    <div class="col-md-4">
+                                        <input type="number" asp-for="@Model.Filter.PriceMax" class="form-control border-0 py-3" placeholder="Maximum Price">
+                                    </div>
+                                    <div class="col-md-2">
+                                        <button class="btn btn-primary border-0 w-100 py-3">Search</button>
+                                    </div>
+                                </div>
+                            </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="section section-properties">
+    <div class="container">
+        <div class="row mb-5 align-items-center">
+            <div class="col-lg-6 text-center mx-auto">
+                <h2 class="font-weight-bold text-primary heading">
+                    Our Properties
+                </h2>
+            </div>
+        </div>
+        <div class="row" style="margin-top: 10px;">
+                @foreach(var item in Model.PropertyList)
+                {
+                    <div class="col-xs-12 col-sm-6 col-md-6 col-lg-4" style="margin-top: 30px;">
+                        <div class="property-item mb-30">
+                            @foreach(var itemImages in item.Images)
+                            {
+                                if(itemImages.IsMain == true)
+                                {
+                                    <div class="position-relative overflow-hidden">
+                                        <a asp-controller="Property" asp-action="Details" asp-route-id="@item.Id">
+                                            <img class="img-fluid" src="@itemImages.ImageURL" style="width: 400px; height: 350px;">
+                                        </a>
+                                        <p class="bg-primary rounded text-white position-absolute start-0 top-0 m-4 py-1 px-3">@item.SaleCategory.Name</p>
+                                        <div class="bg-primary rounded-top text-white position-absolute end-0 mx-4 pt-1 px-3" style="bottom: 100px; right: 20px;">@item.Code</div>
+                                    </div>
+                                }
+                            }
+                            <div class="property-content">
+                                <div class="price mb-2"><span>DOP $@item.Price</span></div>
+                                <div>
+                                    <div class="card-text d-flex">
+                                        <strong class="me-2">Ubicación:</strong>
+                                        <span class="city mb-3" style="font-size: 16px;">
+                                            <span class="icon-location-arrow me-2" style="margin-left: 7px;"></span>
+                                            @item.Location
+                                        </span>
+                                    </div>
+                                    <div class="card-text d-flex">
+                                        <strong class="me-2">Proyecto:</strong>
+                                        <span class="city mb-3" style="font-size: 16px;">
+                                            <span class="icon-location_city me-2" style="margin-left: 7px;"></span>
+                                            @item.PropertyType.Name
+                                        </span>
+                                    </div>
+                                    <div class="">
+                                        <p class="card-text"><strong>Distribución:</strong></p>
+                                    </div>
+                                    <div class="specs d-flex mb-4 text-center" style="margin-top: 10px;">
+                                        <span class="d-block d-flex align-items-center me-3">
+                                            <span class="icon-bed me-2"></span>
+                                            <span class="caption">@item.Bedrooms beds</span>
+                                        </span>
+                                        <span class="d-block d-flex align-items-center">
+                                            <span class="icon-bath me-2"></span>
+                                            <span class="caption">@item.Bathrooms baths</span>
+                                        </span>
+                                        <span class="d-block d-flex align-items-center" style="margin-left: 17px;">
+                                            <span class="icon-bar-chart me-2"></span>
+                                            <span class="caption">@item.Size m2</span>
+                                        </span>
+                                    </div>
+                                    <a asp-action="Details" asp-controller="Property" asp-route-id="@item.Id"
+                                        class="btn btn-primary py-2 px-3">See details</a>
+
+                                    @if (user != null)
+                                    {
+                                        if (user.Role == RolesEnum.Client.ToString())
+                                        {
+                                            if (Model.Favorites.Contains(item))
+                                            {
+                                                <a asp-action="QuitFavoriteProperty" asp-controller="Property" asp-route-propertyid="@item.Id"
+                                                class="btn btn-danger py-2 px-3">Quit favorites</a>
+                                            }
+                                            else
+                                            {
+                                                <a asp-action="SetFavoriteProperty" asp-controller="Property" asp-route-propertyid="@item.Id"
+                                                class="btn btn-info py-2 px-3">Add to favorite</a>
+                                            }
+                                        }
+                                    }
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                }
+        </div>
+    </div>
+</div>
+
+<div class="site-footer">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-4">
+                <div class="widget">
+                    <h3>Contact</h3>
+                    <address>43 Raymouth Rd. Baltemoer, London 3910</address>
+                    <ul class="list-unstyled links">
+                        <li><a href="tel://11234567890">+1(123)-456-7890</a></li>
+                        <li><a href="tel://11234567890">+1(123)-456-7890</a></li>
+                        <li>
+                            <a href="mailto:info@mydomain.com">info@mydomain.com</a>
+                        </li>
+                    </ul>
+                </div>
+                <!-- /.widget -->
+            </div>
+            <!-- /.col-lg-4 -->
+            <div class="col-lg-4">
+                <div class="widget">
+                    <h3>Sources</h3>
+                    <ul class="list-unstyled float-start links">
+                        <li><a href="#">About us</a></li>
+                        <li><a href="#">Services</a></li>
+                        <li><a href="#">Vision</a></li>
+                        <li><a href="#">Mission</a></li>
+                        <li><a href="#">Terms</a></li>
+                        <li><a href="#">Privacy</a></li>
+                    </ul>
+                    <ul class="list-unstyled float-start links">
+                        <li><a href="#">Partners</a></li>
+                        <li><a href="#">Business</a></li>
+                        <li><a href="#">Careers</a></li>
+                        <li><a href="#">Blog</a></li>
+                        <li><a href="#">FAQ</a></li>
+                        <li><a href="#">Creative</a></li>
+                    </ul>
+                </div>
+                <!-- /.widget -->
+            </div>
+            <!-- /.col-lg-4 -->
+            <div class="col-lg-4">
+                <div class="widget">
+                    <h3>Links</h3>
+                    <ul class="list-unstyled links">
+                        <li><a href="#">Our Vision</a></li>
+                        <li><a href="#">About us</a></li>
+                        <li><a href="#">Contact us</a></li>
+                    </ul>
+
+                    <ul class="list-unstyled social">
+                        <li>
+                            <a href="#"><span class="icon-instagram"></span></a>
+                        </li>
+                        <li>
+                            <a href="#"><span class="icon-twitter"></span></a>
+                        </li>
+                        <li>
+                            <a href="#"><span class="icon-facebook"></span></a>
+                        </li>
+                        <li>
+                            <a href="#"><span class="icon-linkedin"></span></a>
+                        </li>
+                        <li>
+                            <a href="#"><span class="icon-pinterest"></span></a>
+                        </li>
+                        <li>
+                            <a href="#"><span class="icon-dribbble"></span></a>
+                        </li>
+                    </ul>
+                </div>
+                <!-- /.widget -->
+            </div>
+            <!-- /.col-lg-4 -->
+        </div>
+        <!-- /.row -->
+
+        <div class="row mt-5">
+            <div class="col-12 text-center">
+                <!--
+                    **==========
+                    NOTE:
+                    Please don't remove this copyright link unless you buy the license here https://untree.co/license/
+                    **==========
+                -->
+
+                <p>
+                    Copyright &copy;
+                    <script>
+                        document.write(new Date().getFullYear());
+                    </script>
+                    . All Rights Reserved. &mdash; Designed with love by
+                    <a href="https://untree.co">Untree.co</a>
+                    <!-- License information: https://untree.co/license/ -->
+                </p>
+                <div>
+                    Distributed by
+                    <a href="https://themewagon.com/" target="_blank">themewagon</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- /.container -->
+</div>
+    

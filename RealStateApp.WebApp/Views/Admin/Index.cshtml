@@ -1,0 +1,114 @@
+﻿@using RealStateApp.Core.Application.ViewModels.Identity.Admin
+@model DashboardViewModel;
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<head>
+    <script src="https://kit.fontawesome.com/7302c44b99.js" crossorigin="anonymous"></script>
+</head>
+
+<div class="container-fluid" style="margin-top: 250px;">
+    <div class="row justify-content-center">
+        <div class="col-3">
+            <div class="card blue-border cardstatistics bg-light">
+                <div class="card-body">
+                    <h5 class="text-secondary text-center">Propiedades</h5>
+                    <div class="d-flex align-items-center">
+                        <i class="fa-solid fa-home fa-lg text-center" style="color: #34ef63;"></i> <!-- Icono de usuarios -->
+                        <h3 class="card-text fw-bolder text-dark ms-2">@Model.RegisterPropertys</h3> <!-- Número de usuarios -->
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-3">
+            <div class="card red-border cardstatistics bg-light">
+                <div class="card-body">
+                    <h5 class="text-secondary text-center">Active Clients</h5>
+                    <div class="d-flex align-items-center">
+                        <i class="fa-solid fa-person" style="color: #f05656;"></i>
+                        <h3 class="card-text fw-bolder text-dark ms-2">@Model.ActivesClients</h3>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-3">
+            <div class="card red-border cardstatistics bg-light">
+                <div class="card-body">
+                    <h5 class="text-secondary text-center">Active Agent</h5>
+                    <div class="d-flex align-items-center">
+                        <i class="fa-solid fa-headset" style="color: #9d38c2;"></i>
+                        <h3 class="card-text fw-bolder text-dark ms-2">@Model.ActivesAngents</h3>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-3">
+            <div class="card red-border cardstatistics bg-light">
+                <div class="card-body">
+                    <h5 class="text-secondary text-center">Active Developers</h5>
+                    <div class="d-flex align-items-center">
+                        <i class="fa-solid fa-laptop-code" style="color: #B197FC;"></i>
+                        <h3 class="card-text fw-bolder text-dark ms-2">@Model.ActivesDevelopers</h3>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-3">
+            <div class="card red-border cardstatistics bg-light">
+                <div class="card-body">
+                    <h5 class="text-secondary text-center">Inactive Agent</h5>
+                    <div class="d-flex align-items-center">
+                        <i class="fa-solid fa-book-skull" style="color: #e44949;"></i>
+                        <h3 class="card-text fw-bolder text-dark ms-2">@Model.InactivesAgents</h3>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-3">
+            <div class="card red-border cardstatistics bg-light">
+                <div class="card-body">
+                    <h5 class="text-secondary text-center">Inactive Clients</h5>
+                    <div class="d-flex align-items-center">
+                        <i class="fa-solid fa-skull fa-lg" style="color: #e04e3e;"></i>
+                        <h3 class="card-text fw-bolder text-dark ms-2">@Model.InactivesClients</h3>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-3">
+            <div class="card red-border cardstatistics bg-light">
+                <div class="card-body">
+                    <h5 class="text-secondary text-center">Inactive Developers</h5>
+                    <div class="d-flex align-items-center">
+                        <i class="fa-solid fa-skull-crossbones" style="color: #d72d2d;"></i>
+                        <h3 class="card-text fw-bolder text-dark ms-2">@Model.InactivesDevelopers</h3>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<style>
+
+
+    #card {
+        border-radius: 6px;
+    }
+
+    .card {
+        border-radius: 20px;
+        box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+        transition: all 0.3s ease;
+        margin-bottom: 20px; /* Agrega un espacio entre las tarjetas */
+    }
+
+    .cardstatistics:hover {
+        transform: translateY(-5px);
+        box-shadow: 0px 6px 12px rgba(0, 0, 0, 0.2);
+    }
+</style>

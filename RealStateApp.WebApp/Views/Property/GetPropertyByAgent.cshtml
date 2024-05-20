@@ -1,0 +1,55 @@
+﻿@using RealStateApp.Core.Application.ViewModels.Domain.Property
+@model List<BasePropertyViewModel>
+@{
+    ViewData["Title"] = "GetPropertyByAgent";
+}
+
+<div class="container-fluid" style="margin-top: 250px;">
+    @if (Model == null || Model.Count == 0)
+    {
+    <h2>No hay propiedades en el sistema</h2>
+    }
+    else
+    {
+        <div class="card-body" >
+            <div class="row">
+                @foreach (var item in Model)
+                {
+                    <div class="col-xs-12 col-sm-6 col-md-6 col-lg-4">
+                        <div class="property-item mb-30">
+                            <a asp-controller="Property" asp-action="Details" asp-route-id="@item.Id" class="img">
+                                <img src="@item.Images.Find(e=>e.IsMain == true)" alt="Image" class="img-fluid" />
+                            </a>
+                            <div class="price mb-2"><span>Code: @item.Code</span></div>
+                            <div class="property-content">
+                                <div class="price mb-2"><span>DOP$@item.Price</span></div>
+                                <div>
+                                    <span class="city d-block mb-3">@item.Location</span>
+                                    <span class="city d-block mb-3">@item.PropertyType</span>
+
+                                    <div class="specs d-flex mb-4">
+                                        <span class="d-block d-flex align-items-center me-3">
+                                            <span class="icon-bed me-2"></span>
+                                            <span class="caption">@item.Bedrooms beds</span>
+                                        </span>
+                                        <span class="d-block d-flex align-items-center">
+                                            <span class="icon-bath me-2"></span>
+                                            <span class="caption">@item.Bathrooms baths</span>
+                                        </span>
+                                        <span class="d-block d-flex align-items-center">
+                                            <span class="icon-bath me-2"></span>
+                                            <span class="caption">@item.Size m2</span>
+                                        </span>
+                                    </div>
+
+                                    <a asp-action="Details" asp-controller="Property" asp-route-id="@item.Id"
+                                        class="btn btn-primary py-2 px-3">See details</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    }
+</div>

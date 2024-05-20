@@ -1,0 +1,98 @@
+﻿@using RealStateApp.WebApp.Models.Agent;
+@model AgentPropertiesWithAgentViewModel;
+<br />
+<br />
+<br />
+<br />
+<div class="container text-center" style="margin-top: 70px;">
+    <div class="row justify-content-center">
+        <div class="col-lg-6">
+            <div class="card">
+                <div class="d-block agent-box p-5">
+                    <div class="img mb-4">
+                        <img src="@Model.Agent.ImageUrl" style="width: 120px;" class="img-fluid" />
+                    </div>
+                    <div class="text">
+                        <h3 class="mb-0">@Model.Agent.FirstName @Model.Agent.LastName</h3>
+                        <div class="meta mb-3">Real Estate</div>
+                        <div class="card">
+                            <div class="card-body">
+                                <h5 class="card-title">Me puedes contactar en:</h5>
+                                <ul class="list-unstyled">
+                                    <li><span class="icon-whatsapp me-2"></span><strong>Whatsapp:</strong> @Model.Agent.PhoneNumber</li>
+                                    <li><span class="icon-message me-2"></span><strong>Email:</strong> @Model.Agent.Email</li>
+                                </ul>
+                                <p class="card-text">Cuenta conmigo en tus asuntos de vivienda!</p>
+                            </div>
+                        </div>
+                        <ul class="list-unstyled social dark-hover d-flex justify-content-center mt-3">
+                            <li class="me-1">
+                                <a href="#"><span class="icon-instagram"></span></a>
+                            </li>
+                            <li class="me-1">
+                                <a href="#"><span class="icon-twitter"></span></a>
+                            </li>
+                            <li class="me-1">
+                                <a href="#"><span class="icon-facebook"></span></a>
+                            </li>
+                            <li class="me-1">
+                                <a href="#"><span class="icon-linkedin"></span></a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<div class="container" style="margin-top: 130px;">
+    <div class="row mb-3">
+        <div class="col-md-12">
+            <h1>Propiedades: </h1>
+        </div>
+    </div>
+
+    <div class="row">
+        @if(Model.Properties.Count != 0)
+        {
+            @foreach (var property in Model.Properties)
+            {
+                <div class="col-md-4 mb-3">
+                    <div class="card">
+
+
+                                <div class="position-relative overflow-hidden">
+                                    <a asp-controller="Property" asp-action="Details" asp-route-id="@property.Id">
+                                        <img class="img-fluid" src="@property.Image" />
+                                    </a>
+                                </div>
+
+
+                        <div class="card-body">
+                            <h5 class="card-title">@property.Code</h5>
+                            <p class="card-text">
+                                <span class="badge bg-primary">@property.PropertyType.Name</span>
+                                <span class="badge bg-success">@property.SaleCategory.Name</span>
+                            </p>
+                            <ul class="list-group list-group-flush">
+                                <li class="list-group-item">Precio: <span class="float-end">DOP @property.Price.ToString("#,##0.00")</span></li>
+                                <li class="list-group-item">Habitaciones: <span class="float-end">@property.Bedrooms</span></li>
+                                <li class="list-group-item">Baños: <span class="float-end">@property.Bathrooms</span></li>
+                                <li class="list-group-item">Tamaño: <span class="float-end">@property.Size M²</span></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            }
+        }
+        else
+        {
+            <h1>El agente no tiene propiedades registradas</h1>
+        }
+
+    </div>
+</div>
+

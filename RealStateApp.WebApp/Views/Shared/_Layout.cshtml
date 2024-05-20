@@ -1,0 +1,175 @@
+﻿@using Microsoft.AspNetCore.Http
+@using RealStateApp.Core.Application.Dtos.Account
+@using RealStateApp.Core.Application.Enums
+@using RealStateApp.Core.Application.Helpers;
+
+@inject IHttpContextAccessor httpContext;
+
+@{
+    var user = httpContext.HttpContext.Session.Get<AuthenticationResponse>("user");
+    var userId = user != null ? user.Id : null;
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - RealStateApp.WebApp</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/RealStateApp.WebApp.styles.css" asp-append-version="true" />
+
+
+    <link rel="shortcut icon" href="images/favicon.png" />
+
+    <meta name="description" content="" />
+    <meta name="keywords" content="bootstrap, bootstrap5" />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Work+Sans:wght@400;500;600;700&display=swap"
+          rel="stylesheet" />
+
+
+    <link rel="stylesheet" href="~/fonts/icomoon/style.css" />
+
+    <link rel="stylesheet" href="~/fonts/flaticon/font/flaticon.css" />
+
+    <link rel="stylesheet" href="~/css/tiny-slider.css" />
+    <link rel="stylesheet" href="~/css/aos.css" />
+    <link rel="stylesheet" href="~/css/style.css" />
+</head>
+<body>
+    <header>
+        <nav class="site-nav">
+            <div class="container">
+                <div class="menu-bg-wrap">
+                    <div class="site-navigation">
+
+                        @if (user != null)
+                        {
+                            if (user.Role.Contains(RolesEnum.Client.ToString()))
+                            {
+                                <a class="logo m-0 float-start" asp-area="" asp-controller="Client" asp-action="Home"><strong> Real</strong> State <img src="~/Icono/precio (1).png" style="width: 35px; height: 35px;" /></a>
+                            }
+                            if (user.Role.Contains(RolesEnum.Agent.ToString()))
+                            {
+                                <a class="logo m-0 float-start" asp-area="" asp-controller="Agent" asp-action="Home"><strong> Real</strong> State <img src="~/Icono/precio (1).png" style="width: 35px; height: 35px;" /></a>
+                            }
+                            if (user.Role.Contains(RolesEnum.Admin.ToString()))
+                            {
+                                <a class="logo m-0 float-start" asp-area="" asp-controller="Admin" asp-action="Home"><strong> Real</strong> State <img src="~/Icono/precio (1).png" style="width: 35px; height: 35px;" /></a>
+                            }
+                        }
+                        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
+                                aria-expanded="false" aria-label="Toggle navigation">
+                            <span class="navbar-toggler-icon"></span>
+                        </button>
+                        <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
+                            <ul class="js-clone-nav d-none d-lg-inline-block text-start site-menu float-end">
+                                @if (user == null)
+                                {
+                                    <a class="navbar-brand text-black" asp-area=""><strong> Real</strong>State <img src="~/Icono/precio (1).png" style="width: 35px; height: 35px;" /></a>
+                                }
+                                @if (user == null)
+                                {
+                                    <li><a style="margin-left: 200px;" asp-controller="Home" asp-action="Index">Home</a></li>
+                                    <li><a asp-controller="Agent" asp-action="GetActiveAgents">Agentes</a></li>
+                                    <li><a asp-controller="User" asp-action="Register">Unete a la App</a></li>
+                                    <li><a asp-controller="User" asp-action="Index">Iniciar Sesion</a></li>
+                                }
+                                else if (user.Role.Contains(RolesEnum.Client.ToString()))
+                                {
+                                    <li class="nav-item">
+                                        <a  asp-controller="Home" asp-action="Index">Home cliente</a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a asp-controller="Agent" asp-action="GetActiveAgents">Agentes</a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a asp-controller="Client" asp-action="MyFavoriteProperty" asp-route-ClientId="@user.Id">Propiedades Favoritas</a>
+                                    </li>
+                                }
+                                else if (user.Role.Contains(RolesEnum.Admin.ToString()))
+                                {
+                                    <li class="nav-item" style="margin-left: 200px;">
+                                        <a asp-area="" asp-controller="Admin" asp-action="Index">Home</a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a asp-area="" asp-controller="Admin" asp-action="ListAgent">List. de Agentes</a>
+                                    </li>
+                                    <li class="has-children">
+                                        <a href="#">Mantenimientos</a>
+                                        <ul class="dropdown">
+                                            <li><a asp-controller="Admin" asp-action="ListImprovements">Mant. de Mejoras</a></li>
+                                            <li><a asp-controller="Admin" asp-action="AdminMaintenance">Mant. de Administrador</a></li>
+                                            <li><a asp-controller="Admin" asp-action="ListSaleCategory">Mant. de Tipo de Ventas</a></li>
+                                            <li><a asp-controller="Admin" asp-action="ListPropertyType">Mant. de Tipo de Propiedades</a></li>
+                                            <li><a asp-controller="Admin" asp-action="DeveloperMaintenance">Mant. de Desarrolladores</a></li>
+                                        </ul>
+                                    </li>
+                                }
+                                else if (user.Role.Contains(RolesEnum.Agent.ToString()))
+                                {
+                                    <li class="nav-item">
+                                        <a asp-area="" asp-controller="Agent" asp-action="Index">Home Agente</a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a asp-area="" asp-controller="Agent" asp-action="Property" asp-route-agentId="@user.Id">Properties</a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a asp-area="" asp-controller="Agent" asp-action="EditProfile">Mi Perfil</a>
+                                    </li>
+                                }
+                            </ul>
+                            @if (user != null)
+                            {
+                                if (user.Role.Contains(RolesEnum.Admin.ToString()))
+                                {
+                                    <a class="nav-link text-light" style="margin-left: 230px;" asp-area="" asp-controller="Admin" asp-action="LogOut"> Log Out<img src="~/Icono/salida (1).png" style="width: 40x; height: 40px; margin-left: 7px;" /></a>
+                                }
+                                if (user.Role.Contains(RolesEnum.Client.ToString()))
+                                {
+                                    <a class="nav-link text-light" style="margin-left: 230px;" asp-area="" asp-controller="Client" asp-action="LogOut"> Log Out <img src="~/Icono/salida (1).png" style="width: 40x; height: 40px; margin-left: 7px;" /></a>
+                                }
+                                if (user.Role.Contains(RolesEnum.Agent.ToString()))
+                                {
+                                    <a class="nav-link text-light" style="margin-left: 230px;" asp-area="" asp-controller="Agent" asp-action="LogOut"> Log Out <img src="~/Icono/salida (1).png" style="width: 40x; height: 40px; margin-left: 7px;" /></a>
+                                }
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </nav>
+    </header>
+    <div class="container">
+        <main role="main" class="pb-3">
+            @RenderBody()
+        </main>
+    </div>
+
+    <footer class="border-top footer text-muted">
+        <div class="container text-black">
+            RealStateApp.WebApp By Geremy Ferran y Yahinniel Vasquez- <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+        </div>
+    </footer>
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>
+<style>
+    body {
+        font-family: "Josefin Sans", sans-serif;
+        background: -webkit-linear-gradient(45deg, #13919f 0%,#05948f 60%,#05cae9 100%)
+    }
+</style>
+<script src="~/js/bootstrap.bundle.min.js"></script>
+<script src="~/js/tiny-slider.js"></script>
+<script src="~/js/aos.js"></script>
+<script src="~/js/navbar.js"></script>
+<script src="~/js/counter.js"></script>
+<script src="~/js/custom.js"></script>

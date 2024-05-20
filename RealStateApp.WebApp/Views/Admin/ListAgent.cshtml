@@ -1,0 +1,125 @@
+﻿@using RealStateApp.Core.Application.ViewModels.Identity.Admin
+@model List<AgentViewModel>
+@{
+    ViewData["Title"] = "Listado de Agentes";
+}
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<!-- SweetAlert2 -->
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+
+<div class="container-fluid" style="margin-top: 150px;">
+    @if (Model == null || Model.Count == 0)
+    {
+        <h2>No hay agentes registrados en el sistema</h2>
+    }
+    else
+    {
+        <div class="card-body">
+            <div class="row">
+                @foreach (AgentViewModel item in Model)
+                {
+                    <div class="card mb-3 mr-3" style="max-width: 500px; margin-right: 20px;">
+                        <div class="row no-gutters">
+                            <div class="col-md-8">
+                                <div class="card-body">
+                                    <h5 class="card-title"><strong>@item.FirstName @item.LastName</strong></h5>
+                                    <p class="card-text"><strong>Correo: </strong>@item.Email</p>
+                                    <p class="card-text"><strong>Cantidad de propiedades: </strong>@item.QuantityProperty</p>
+                                    <p class="card-text"><small class="text-muted"><strong>Agente Inmobiliario</strong></small></p>
+                                </div>
+
+                                <a  onclick="deleteAgent('@item.Id')" class="btn btn-outline-danger mt-2">Eliminar</a>
+                                @if (item.IsActive == true)
+                                {
+                                    <button onclick="confirmAction('@item.Id', '@item.Role', false)" class="btn btn-outline-warning mt-2">Inactivar</button>
+                                }
+                                @if (item.IsActive == false)
+                                {
+                                    <button onclick="confirmAction('@item.Id', '@item.Role', true)" class="btn btn-outline-info mt-2">Activar</button>
+                                }
+                            </div>
+                        </div>
+                    </div>
+
+                }
+            </div>
+        </div>
+    }
+</div>
+
+
+<script>
+    function deleteAgent(id) {
+        Swal.fire({
+            title: `¿Quieres eliminar este agente?`,
+            showDenyButton: true,
+            confirmButtonText: "Sí",
+            denyButtonText: "No"
+        }).then((result) => {
+            if (result.isConfirmed) {
+                $.ajax({
+                    url: '/Admin/DeleteAgent',
+                    type: 'POST',
+                    data: {
+                        id: id,
+                    },
+                    success: function (response) {
+                        Swal.fire(`Actualice la pagina`, "", "success");
+                    },
+                    error: function (xhr, status, error) {
+                        Swal.fire("Actualice la pagina", "", "success");
+                        console.error(xhr.responseText);
+                    }
+                });
+            } else if (result.isDenied) {
+                Swal.fire("Acción cancelada", "", "info");
+            }
+        });
+    }
+</script>
+
+
+<script>
+    function confirmAction(id, role, isActive) {
+        let action = isActive ? "Activar" : "Inactivar";
+        Swal.fire({
+            title: `¿Quieres ${action} este agente?`,
+            showDenyButton: true,
+            confirmButtonText: "Sí",
+            denyButtonText: "No"
+        }).then((result) => {
+            if (result.isConfirmed) {
+                $.ajax({
+                    url: '/Admin/ChangeAgentStatus',
+                    type: 'POST', 
+                    data: {
+                        id: id,
+                        role: role
+                    },
+                    success: function (response) {
+                        Swal.fire(`Actualice la pagina`, "", "success");
+                    },
+                    error: function (xhr, status, error) {
+                        Swal.fire("Error al realizar la acción", "", "error");
+                        console.error(xhr.responseText);
+                    }
+                });
+            } else if (result.isDenied) {
+                Swal.fire("Acción cancelada", "", "info");
+            }
+        });
+    }
+</script>
+
+<style>
+    #card {
+        border-radius: 6px;
+    }
+
+    .card {
+        border-radius: 20px;
+    }
+</style>

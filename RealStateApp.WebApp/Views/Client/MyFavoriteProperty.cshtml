@@ -1,0 +1,75 @@
+﻿@using Microsoft.AspNetCore.Http
+@using RealStateApp.Core.Application.Dtos.Account
+@using RealStateApp.Core.Application.Enums
+@using RealStateApp.Core.Application.Helpers;
+
+@inject IHttpContextAccessor httpContext;
+
+@{
+    var user = httpContext.HttpContext.Session.Get<AuthenticationResponse>("user");
+    var userId = user != null ? user.Id : null;
+}
+@using RealStateApp.Core.Application.ViewModels.Domain.Property;
+@model List<BasePropertyViewModel>
+<div class="section section-properties">
+    <div class="container">
+        <div class="row mb-5 align-items-center">
+            <div class="col-lg-6 text-center mx-auto">
+                <h2 class="font-weight-bold text-primary heading">
+                    Our Properties
+                </h2>
+            </div>
+        </div>
+        <br />
+        <br />
+        <br />
+        <br />
+        <div class="row">
+            @foreach (var item in Model)
+            {
+                <div class="col-xs-12 col-sm-6 col-md-6 col-lg-4">
+                    <div class="property-item mb-30">
+                        @foreach (var itemImages in item.Images)
+                        {
+                            if (itemImages.IsMain == true)
+                            {
+                                <div class="position-relative overflow-hidden">
+                                    <a asp-controller="Property" asp-action="Details" asp-route-id="@item.Id">
+                                        <img class="img-fluid" src="@itemImages.ImageURL" style="width: 400px; height: 350px;">
+                                    </a>
+                                </div>
+                            }
+                        }
+                        <div class="price mb-2"><span>Code: @item.Code</span></div>
+                        <div class="property-content">
+                            <div class="price mb-2"><span>DOP$@item.Price</span></div>
+                            <div>
+                                <span class="city d-block mb-3">@item.Location</span>
+                                <span class="city d-block mb-3">@item.PropertyType</span>
+
+                                <div class="specs d-flex mb-4">
+                                    <span class="d-block d-flex align-items-center me-3">
+                                        <span class="icon-bed me-2"></span>
+                                        <span class="caption">@item.Bedrooms beds</span>
+                                    </span>
+                                    <span class="d-block d-flex align-items-center">
+                                        <span class="icon-bath me-2"></span>
+                                        <span class="caption">@item.Bathrooms baths</span>
+                                    </span>
+                                    <span class="d-block d-flex align-items-center">
+                                        <span class="icon-bath me-2"></span>
+                                        <span class="caption">@item.Size m2</span>
+                                    </span>
+                                </div>
+
+                                <a asp-action="Details" asp-controller="Property" asp-route-id="@item.Id"
+                                   class="btn btn-primary py-2 px-3">See details</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+

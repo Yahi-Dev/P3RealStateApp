@@ -1,0 +1,55 @@
+﻿@using RealStateApp.Core.Application.ViewModels.Identity.Users;
+@model SaveUserViewModel
+
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+
+<div class="container-fluid">
+
+    <div class="row">
+        <div class="col-6 offset-3">
+            <div class="card">
+                <div class="card-header text-light">
+                    <h4>Editando el usuario</h4>
+                </div>
+                <div class="card-body">
+                    <form method="post" asp-controller="Agent" asp-action="EditProfile" method="post" enctype="multipart/form-data">
+
+                        <div class="mb-3">
+                            <label asp-for="FirstName" class="form-label">Nombre: </label>
+                            <input asp-for="FirstName" class="form-control" />
+                            <span asp-validation-for="FirstName" class="text-danger"></span>
+                        </div>
+                        <div class="mb-3">
+                            <label asp-for="LastName" class="form-label">Apellido: </label>
+                            <input asp-for="LastName" class="form-control" />
+                            <span asp-validation-for="LastName" class="text-danger"></span>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="PhoneNumber" class="form-label">Telefono: </label>
+                            <input asp-for="PhoneNumber" class="form-control" />
+                            <span asp-validation-for="PhoneNumber" class="text-danger"></span>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="formFile" class="form-label">Imagen: </label>
+                            <input type="file" asp-for="formFile" class="form-control" />
+                            <span asp-validation-for="formFile" class="text-danger"></span>
+                        </div>
+
+                        <input type="hidden" asp-for="Id" />
+
+                        <button type="submit" class="btn btn-primary">Guardar</button>
+                        <a asp-controller="Agent" asp-action="Index" class="btn btn-warning">Volver atras</a>
+                    </form>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>

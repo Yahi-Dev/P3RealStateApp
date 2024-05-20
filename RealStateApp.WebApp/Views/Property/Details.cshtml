@@ -1,0 +1,200 @@
+﻿@using RealStateApp.Core.Application.ViewModels.Domain.Property;
+@model PropertyInfoViewModel;
+<div class="hero page-inner overlay"
+     style="background-image: url(~/wwwroot/images/hero_bg_3.jpg);">
+    <div class="container">
+        <div class="row justify-content-center align-items-center">
+            <div class="col-lg-9 text-center mt-5">
+                <h1 class="heading" data-aos="fade-up">
+                    @Model.Property.Code
+                </h1>
+
+                <nav aria-label="breadcrumb"
+                     data-aos="fade-up"
+                     data-aos-delay="200">
+                    <ol class="breadcrumb text-center justify-content-center">
+                        <li class="breadcrumb-item"><a asp-controller="Home" asp-action="Index">Home</a></li>
+
+                        <li class="breadcrumb-item text-white"
+                            aria-current="page">
+                                Properties
+                        </li>
+
+                        <li class="breadcrumb-item active text-white-50"
+                            aria-current="page">
+                            @Model.Property.Code
+                        </li>
+
+                    </ol>
+                </nav>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="section">
+    <div class="container">
+        <div class="row justify-content-between">
+            <div class="col-lg-7" style="margin-top: 200px;">
+                <div class="img-property-slide-wrap">
+                    <div class="img-property-slide">
+                        <div id="carouselExampleFade" class="carousel slide carousel-fade">
+                            <div class="carousel-inner">
+                                @foreach (var itemImages in Model.Property.Images)
+                                {
+                                    <div class="carousel-item @(itemImages == Model.Property.Images.First() ? "active" : "")">
+                                        <img src="@itemImages.ImageURL" class="d-block w-100" alt="Image">
+                                    </div>
+                                }
+                            </div>
+                            <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleFade" data-bs-slide="prev">
+                                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                                <span class="visually-hidden">Previous</span>
+                            </button>
+                            <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleFade" data-bs-slide="next">
+                                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                                <span class="visually-hidden">Next</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-4">
+                <h2 class="heading text-primary">@Model.Property.Code</h2>
+                <p class="text-black-50" style="font-size: larger;">
+                    <div class="">
+                        <p class="card-text" style="font-size: 19px;"><strong>Mejoras</strong></p>
+                    </div>
+                    <ul>
+                        @foreach (var item in Model.Property.Improvements)
+                        {
+                            <li style="font-size: 16px;">
+                                @item.Improvement.ImprovementType
+                            </li>
+                        }
+                    </ul>
+                </p>
+                <div class="">
+                    <p class="card-text" style="font-size: 19px;"><strong>Distribución:</strong></p>
+                </div>
+                <p class="text-black-50" style="font-size: larger;">
+                    <ul class="list-unstyled">
+                        <li style="font-size: 16px;"><span style="font-size: 16px;" class="flaticon-house me-2"></span><strong>Tipo:</strong> @Model.Property.PropertyType.Name</li>
+                        <li style="font-size: 16px;"><span style ="font-size: 16px;" class="icon-bed me-2"></span><strong> Cuartos:</strong> @Model.Property.Bedrooms</li>
+                        <li style="font-size: 16px;"><span style="font-size: 16px;" class="icon-bath me-2"></span><strong> Baños:</strong> @Model.Property.Bathrooms</li>
+                        <li style="font-size: 16px;"><span style="font-size: 16px;" class="icon-bar-chart me-2"></span><strong>  Metros cuadrados:</strong> @Model.Property.Size</li>
+                        <li style="font-size: 16px;"><span style="font-size: 16px;" class="icon-money me-2"></span><strong> Tipo de venta:</strong> @Model.Property.SaleCategory.Name</li>
+                    </ul>
+                </p>
+
+                <h3 class="text-black-50">
+                    DOP $@Model.Property.Price <span class="icon-money me-2"></span>
+                </h3>
+
+                <div class="d-block agent-box p-5">
+                    <div class="img mb-4 text-center">
+                        <img src="@Model.Agent.ImageUrl"
+                             alt="Image"
+                             class="img-fluid" />
+                    </div>
+                    <h3 class="mb-0 text-center">@Model.Agent.FirstName @Model.Agent.LastName</h3>
+                    <div class="text">
+                        <h5 class="mb-0 text-center">Real Estate</h5>
+                        <h5 class="card-title" style="margin-top: 10px;">Me puedes contactar en:</h5>
+                        <ul class="list-unstyled">
+                            <li><span class="icon-whatsapp me-2"></span><strong>Whatsapp:</strong> @Model.Agent.PhoneNumber</li>
+                            <li><span class="icon-message me-2"></span><strong>Email:</strong> @Model.Agent.Email</li>
+                        </ul>
+                        <p class="card-text">Cuenta conmigo en tus asuntos de vivienda!</p>
+                        <ul class="list-unstyled social dark-hover d-flex justify-content-center mt-3">
+                            <li class="me-1">
+                                <a href="#"><span class="icon-instagram"></span></a>
+                            </li>
+                            <li class="me-1">
+                                <a href="#"><span class="icon-twitter"></span></a>
+                            </li>
+                            <li class="me-1">
+                                <a href="#"><span class="icon-facebook"></span></a>
+                            </li>
+                            <li class="me-1">
+                                <a href="#"><span class="icon-linkedin"></span></a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="site-footer">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-4">
+                <div class="widget">
+                    <h3>Contact</h3>
+                    <address>43 Raymouth Rd. Baltemoer, London 3910</address>
+                    <ul class="list-unstyled links">
+                        <li><a href="tel://11234567890">+1(123)-456-7890</a></li>
+                        <li><a href="tel://11234567890">+1(123)-456-7890</a></li>
+                        <li>
+                            <a href="mailto:info@mydomain.com">info@mydomain.com</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <div class="col-lg-4">
+                <div class="widget">
+                    <h3>Sources</h3>
+                    <ul class="list-unstyled float-start links">
+                        <li><a href="#">About us</a></li>
+                        <li><a href="#">Services</a></li>
+                        <li><a href="#">Vision</a></li>
+                        <li><a href="#">Mission</a></li>
+                        <li><a href="#">Terms</a></li>
+                        <li><a href="#">Privacy</a></li>
+                    </ul>
+                    <ul class="list-unstyled float-start links">
+                        <li><a href="#">Partners</a></li>
+                        <li><a href="#">Business</a></li>
+                        <li><a href="#">Careers</a></li>
+                        <li><a href="#">Blog</a></li>
+                        <li><a href="#">FAQ</a></li>
+                        <li><a href="#">Creative</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="col-lg-4">
+                <div class="widget">
+                    <h3>Links</h3>
+                    <ul class="list-unstyled links">
+                        <li><a href="#">Our Vision</a></li>
+                        <li><a href="#">About us</a></li>
+                        <li><a href="#">Contact us</a></li>
+                    </ul>
+
+                    <ul class="list-unstyled social">
+                        <li>
+                            <a href="#"><span class="icon-instagram"></span></a>
+                        </li>
+                        <li>
+                            <a href="#"><span class="icon-twitter"></span></a>
+                        </li>
+                        <li>
+                            <a href="#"><span class="icon-facebook"></span></a>
+                        </li>
+                        <li>
+                            <a href="#"><span class="icon-linkedin"></span></a>
+                        </li>
+                        <li>
+                            <a href="#"><span class="icon-pinterest"></span></a>
+                        </li>
+                        <li>
+                            <a href="#"><span class="icon-dribbble"></span></a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

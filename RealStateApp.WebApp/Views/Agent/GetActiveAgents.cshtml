@@ -1,0 +1,40 @@
+﻿@using RealStateApp.Core.Application.ViewModels.Identity.Admin
+@model List<AgentMainMenuViewmodel>
+@{
+    ViewData["Title"] = "Agentes";
+}
+
+
+<div class="container-fluid" style="margin-top: 150px;">
+    @if (Model == null || Model.Count == 0)
+    {
+        <h2>No hay Agentes en el sistema</h2>
+    }
+    else
+    {
+        <div class="container">
+            <div class="row">
+                @foreach (AgentMainMenuViewmodel item in Model)
+                {
+                    <div class="col-md-4 mb-3">
+                        <div class="card h-100" style="max-width: 400px;">
+                            <div class="row no-gutters">
+                                <div class="col-md-4">
+                                    <br />
+                                    <img src="@item.ImageUrl" class="card-img" style="margin-bottom: 10px; margin-left: 10px;">
+                                </div>
+                                <div class="col-md-8">
+                                    <div class="card-body">
+                                        <h5 class="card-title"><strong>@item.FirstName @item.LastName</strong></h5>
+                                        <p class="card-text"><small class="text-muted"><strong>Agente Inmobiliario</strong></small></p>
+                                    </div>
+                                    <a asp-controller="Agent" asp-action="GetPropertyByAgent" asp-route-agentId="@item.AgentId" class="btn btn-outline-info mt-2">Ver Propiedades</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    }
+</div>

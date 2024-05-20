@@ -1,0 +1,186 @@
+﻿@using RealStateApp.Core.Application.ViewModels.Domain.Property;
+@using RealStateApp.Core.Application.Helpers
+@using RealStateApp.Core.Application.Dtos.Account
+@using Microsoft.AspNetCore.Http
+@using RealStateApp.Core.Application.Dtos.Account
+@using RealStateApp.Core.Application.Enums
+@using RealStateApp.Core.Application.Helpers;
+
+@model SavePropertyViewModel
+@{
+    bool editMode = Model.Id == 0 ? false : true;
+    ViewData["Title"] = "Guardar Propiedad";
+    var improvementIdsVm = ViewBag.PreviousImprovementsIds;
+}
+@inject IHttpContextAccessor httpContextAccessor
+@{
+    var User = httpContextAccessor.HttpContext.Session.Get<AuthenticationResponse>("user");
+
+}
+
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-6 offset-3">
+            <div class="card">
+                <div class="card-header bg-light text-light">
+                    <h4>@(editMode ? $"Editando la propiedad: {Model.Id}" : "Creando una nueva Propiedad")</h4>
+                </div>
+                <div class="card-body">
+
+                    @if (Model.PropertyTypes == null || Model.PropertyTypes.Count == 0)
+                    {
+                        <h4>No hay tipo de propiedades creadas</h4>
+                        <a asp-controller="Agent" asp-action="Index" class="btn btn-warning">Volver atras</a>
+                    }
+                    else
+                    {
+                        <form method="post" asp-route-id="@User.Id" asp-controller="Property" asp-action="@(editMode ? "EditProperty":"CreateProperty")" enctype="multipart/form-data">
+
+                            <div class="mb-3">
+                                <label asp-for="Price" class="form-label">Precio: </label>
+                                <input type="number" asp-for="Price" class="form-control" />
+                                <span asp-validation-for="Price" class="text-danger"></span>
+                            </div>
+
+                            <div class="mb-3">
+                                <label asp-for="Bedrooms" class="form-label">Numero de Habitaciones: </label>
+                                <input type="number" asp-for="Bedrooms" class="form-control" />
+                                <span asp-validation-for="Bedrooms" class="text-danger"></span>
+                            </div>
+
+                            <div class="mb-3">
+                                <label asp-for="Bathrooms" class="form-label">Numero de Baños: </label>
+                                <input type="number" step="any" asp-for="Bathrooms" class="form-control" />
+                                <span asp-validation-for="Bathrooms" class="text-danger"></span>
+                            </div>
+
+                            <div class="mb-3">
+                                <label asp-for="Size" class="form-label">Size: </label>
+                                <input type="number" step="any" asp-for="Size" class="form-control" />
+                                <span asp-validation-for="Size" class="text-danger"></span>
+                            </div>
+
+                            <div class="mb-3">
+                                <label asp-for="Description" class="form-label">Description: </label>
+                                <input type="text" step="any" asp-for="Description" class="form-control" />
+                                <span asp-validation-for="Description" class="text-danger"></span>
+                            </div>
+
+                            <div class="mb-3">
+                                <label asp-for="Location" class="form-label">Location: </label>
+                                <input type="text" step="any" asp-for="Location" class="form-control" />
+                                <span asp-validation-for="Location" class="text-danger"></span>
+                            </div>
+
+
+                            <div class="mb-3">
+                                <label asp-for="PropertyTypeId" class="form-label">Tipo de Propiedad: </label>
+                                <select asp-for="PropertyTypeId" asp-items="@(new SelectList(Model.PropertyTypes,"Id","Name"))" class="form-select">
+                                    <option value="0">Seleccione una opcion</option>
+
+                                </select>
+                                <span asp-validation-for="PropertyTypeId" class="text-danger"></span>
+                            </div>
+
+
+                            <div class="mb-3">
+                                <label asp-for="SaleCategoryId" class="form-label">Tipo de venta: </label>
+                                <select asp-for="SaleCategoryId" asp-items="@(new SelectList(Model.SalesCategories,"Id","Name"))" class="form-select">
+                                    <option value="0">Seleccione una opcion</option>
+
+                                </select>
+                                <span asp-validation-for="SaleCategoryId" class="text-danger"></span>
+                            </div>
+
+                            <div class="mb-3">
+                                <label asp-for="Improvement" class="form-label">Mejoras: </label>
+                                @foreach (var improvement in Model.Improvements)
+                                {
+                                    bool isChecked = improvementIdsVm != null && improvementIdsVm.Contains(improvement.Id);
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" id="@improvement.Id" name="Improvement" value="@improvement.Id" @(isChecked ? "checked" : "")>
+                                        <label class="form-check-label" for="@improvement.Id">
+                                            @improvement.ImprovementType
+                                        </label>
+                                    </div>
+                                }
+                            </div>
+
+
+
+
+                            @* <div class="form-group">
+                        <label for="imagenes">Seleccionar imágenes:</label>
+                        <input type="file" name="imagenes" id="imagenes" multiple accept="image/*" class="form-control-file">
+                        </div>
+                        <div class="mb-3">
+                        <label asp-for="File" class="form-label">Seleccione un archivo:</label>
+                        @if (editMode)
+                        {
+                        <input asp-for="File" class="form-control" />
+                        }
+                        else
+                        {
+                        <input required asp-for="File" class="form-control" />
+                        }
+
+                        <span asp-validation-for="File" class="text-danger"></span>
+                        </div>*@
+
+                            <div class="form-group">
+                                <label for="imagenes">Seleccionar imágenes:</label>
+                                @if (editMode)
+                                {
+                                    <input asp-for="Image1" class="form-control" />
+                                    <input asp-for="Image2" class="form-control" />
+                                    <input asp-for="Image3" class="form-control" />
+                                    <input asp-for="Image4" class="form-control" />
+                                }
+                                else
+                                {
+                                    <input required asp-for="Image1" class="form-control" />
+                                    <input asp-for="Image2" class="form-control" />
+                                    <input asp-for="Image3" class="form-control" />
+                                    <input asp-for="Image4" class="form-control" />
+                                }
+                            </div>
+
+                            @*@if (editMode)
+                        {
+                        @foreach (var improvement in Model.Improvements)
+                        {
+                        <input asp-for="ImprovementsId" type="hidden" id="@(improvement.Id)" name="ImprovementsId" value="@improvement.Id">
+                        }
+                        }@**@
+                            <input type="hidden" asp-for="Id" />
+                            <input type="hidden" asp-for="Code" value="-" />
+                            <input type="hidden" asp-for="Id" value="0" />
+                            <input type="hidden" asp-for="ImagePath" value="null" />
+                            <input type="hidden" asp-for="AgentId" value="@User.Id" />
+
+                            <button type="submit" class="btn btn-primary">Guardar</button>
+                            <a asp-controller="Agent" asp-action="Index" class="btn btn-warning">Volver atras</a>
+                        </form>
+                    }
+
+
+
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+</div>
+

@@ -1,0 +1,54 @@
+﻿@*@using RealStateApp.Core.Application.ViewModels.Domain.Property;
+@model List<FiltersPropertiesViewModel>
+@{
+    ViewData["Title"] = "Propiedades";
+}
+
+<div class="container-fluid">
+
+    <div class="row mb-3">
+        <div class="col-12 text-center">
+            <h1 class="display-4">Explora nuestras propiedades</h1>
+            <p class="lead">Encuentra la propiedad perfecta para ti</p>
+            <a asp-controller="Property" asp-action="Create" class="btn btn-primary btn-lg">Crear nueva Propiedad</a>
+        </div>
+    </div>
+
+    <div class="row">
+
+        @if (Model == null || Model.Count == 0)
+        {
+            <div class="col-12 text-center">
+                <h2>No hay Propiedades</h2>
+            </div>
+        }
+        else
+        {
+            @foreach (FiltersPropertiesViewModel property in Model)
+            {
+                <div class="col-md-4 mb-4">
+                    <div class="card h-100">
+                        <img src="@property.imagenes.FirstOrDefault()?.ImageURL" class="card-img-top" alt="Property Image">
+                        <div class="card-body">
+                            <h5 class="card-title">@property.PropertyType. </h5>
+                            <p class="card-text">@property.SaleCategory</p>
+                            <ul class="list-unstyled">
+                                <li>Cantidad de habitaciones: @property.Bedrooms</li>
+                                <li>Cantidad de Baños: @property.Bathrooms</li>
+                                <li>Tamaño: @property.m</li>
+                            </ul>
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div class="btn-group">
+                                    <a asp-controller="Property" asp-action="Edit" asp-route-id="@property.Id" class="btn btn-sm btn-info">Editar</a>
+                                    <a asp-controller="Property" asp-action="Delete" asp-route-id="@property.Id" class="btn btn-sm btn-danger">Borrar</a>
+                                </div>
+                                <span class="badge bg-secondary">$@property.pric</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        }
+    </div>
+</div>
+*@
